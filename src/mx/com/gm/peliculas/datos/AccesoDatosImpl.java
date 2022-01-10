@@ -22,21 +22,18 @@ public class AccesoDatosImpl implements IAccesoDatos {
         try {
             var entrada = new BufferedReader(new FileReader(archivo));
             String linea = null;
-            try {
+            linea = entrada.readLine();
+            while (linea != null) {
+                Pelicula pelicula = new Pelicula(linea);
+                peliculas.add(pelicula);
                 linea = entrada.readLine();
-                while (linea != null) {
-                    Pelicula pelicula = new Pelicula(linea);
-                    peliculas.add(pelicula);
-                    linea = entrada.readLine();
-                }
-                entrada.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                throw new LecturaDatosEx("Ecepcion al listar peliculas:" + ex.getMessage());
             }
+            entrada.close();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
             throw new LecturaDatosEx("Ecepcion al listar peliculas:" + ex.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(AccesoDatosImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return peliculas;
 
@@ -58,6 +55,31 @@ public class AccesoDatosImpl implements IAccesoDatos {
 
     @Override
     public String buscar(String nombreRecurso, String buscar) throws LecturaDatosEx {
+        var archivo = new File(nombreRecurso);
+        String resultado = null;
+        try {
+            var entrada = new BufferedReader(new FileReader(archivo));
+            String linea = null;
+            linea = entrada.readLine();
+            var indice =1;
+            while (linea != null) {
+                if(buscar != null && buscar.equalsIgnoreCase(linea)){
+                    resultado = "Pelicula " + linea + " encontrada en el indice " + indice;
+                    break;
+                }
+                linea = entrada.readLine();
+                indice++;
+            }
+entrada.close();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            throw new LecturaDatosEx("Ecepcion al buscar pelicula:" + ex.getMessage());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            throw new LecturaDatosEx("Ecepcion al buscar pelicula:" + ex.getMessage());
+        }
+
+        return resultado;
     }
 
     @Override
