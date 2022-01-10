@@ -10,5 +10,5 @@ public interface ICatalogoPeliculas {
 
     void buscarPelicula(String buscar);
 
-    void iniciarCatologPeliculas();
+    void iniciarCatologoPeliculas();
 }
