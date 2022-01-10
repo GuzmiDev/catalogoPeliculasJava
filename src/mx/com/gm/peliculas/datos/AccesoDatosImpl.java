@@ -2,8 +2,6 @@ package mx.com.gm.peliculas.datos;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mx.com.gm.peliculas.domain.Pelicula;
 import mx.com.gm.peliculas.excepeciones.*;
 
@@ -31,9 +29,10 @@ public class AccesoDatosImpl implements IAccesoDatos {
             entrada.close();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
-            throw new LecturaDatosEx("Ecepcion al listar peliculas:" + ex.getMessage());
+            throw new LecturaDatosEx("Exepcion al listar peliculas:" + ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(AccesoDatosImpl.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            throw new LecturaDatosEx("Exepcion al listar peliculas:" + ex.getMessage());
         }
         return peliculas;
 
@@ -49,7 +48,7 @@ public class AccesoDatosImpl implements IAccesoDatos {
             System.out.println("Se ha escrito información al archivo: " + pelicula);
         } catch (IOException ex) {
             ex.printStackTrace();
-            throw new EscriturasDatosEx("Ecepcion al escribir peliculas:" + ex.getMessage());
+            throw new EscriturasDatosEx("Exepcion al escribir peliculas:" + ex.getMessage());
         }
     }
 
@@ -61,22 +60,22 @@ public class AccesoDatosImpl implements IAccesoDatos {
             var entrada = new BufferedReader(new FileReader(archivo));
             String linea = null;
             linea = entrada.readLine();
-            var indice =1;
+            var indice = 1;
             while (linea != null) {
-                if(buscar != null && buscar.equalsIgnoreCase(linea)){
+                if (buscar != null && buscar.equalsIgnoreCase(linea)) {
                     resultado = "Pelicula " + linea + " encontrada en el indice " + indice;
                     break;
                 }
                 linea = entrada.readLine();
                 indice++;
             }
-entrada.close();
+            entrada.close();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
-            throw new LecturaDatosEx("Ecepcion al buscar pelicula:" + ex.getMessage());
+            throw new LecturaDatosEx("Exepcion al buscar pelicula:" + ex.getMessage());
         } catch (IOException ex) {
             ex.printStackTrace();
-            throw new LecturaDatosEx("Ecepcion al buscar pelicula:" + ex.getMessage());
+            throw new LecturaDatosEx("Exepcion al buscar pelicula:" + ex.getMessage());
         }
 
         return resultado;
@@ -84,10 +83,24 @@ entrada.close();
 
     @Override
     public void crear(String nombreRecruso) throws AccesoDatosEx {
+        var archivo = new File(nombreRecruso);
+        try {
+            var salida = new PrintWriter(archivo);
+            salida.close();
+            System.out.println("Se ha creado el archivo");
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+            throw new AccesoDatosEx("Excepcion al crear archivo:" + ex.getMessage());
+        }
     }
 
     @Override
     public void borrar(String nombreRecurso) throws AccesoDatosEx {
+        var archivo = new File(nombreRecurso);
+        if (archivo.exists()) {
+            archivo.delete();
+            System.out.println("Se ha borrado el archivo");
+        }
     }
 
 }
