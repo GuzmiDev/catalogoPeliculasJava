@@ -6,6 +6,7 @@ import mx.com.gm.peliculas.datos.AccesoDatosImpl;
 import mx.com.gm.peliculas.datos.IAccesoDatos;
 import mx.com.gm.peliculas.domain.Pelicula;
 import mx.com.gm.peliculas.excepeciones.AccesoDatosEx;
+import mx.com.gm.peliculas.excepeciones.LecturaDatosEx;
 
 public class CatalogoPeliculasImpl implements ICatalogoPeliculas {
 
@@ -21,6 +22,7 @@ public class CatalogoPeliculasImpl implements ICatalogoPeliculas {
         boolean anexar = false;
         try {
             anexar = datos.existe(NOMBRE_RECURSO);
+            datos.escribir(pelicula, NOMBRE_RECURSO, anexar);
         } catch (AccesoDatosEx ex) {
             System.out.println("Error de acceso a datos");
             ex.printStackTrace();
@@ -30,6 +32,16 @@ public class CatalogoPeliculasImpl implements ICatalogoPeliculas {
 
     @Override
     public void listarPeliculas() {
+        try {
+            var peliculas = this.datos.listar(NOMBRE_RECURSO);
+       peliculas.forEach(pelicula -> {
+           System.out.println("pelicula = "+ pelicula);
+       });
+        } catch (AccesoDatosEx ex) {
+            System.out.println("Error de acceso datos");
+            ex.printStackTrace();
+        }
+        
     }
 
     @Override
