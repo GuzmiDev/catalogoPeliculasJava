@@ -9,7 +9,7 @@ public class CatalogoPeliculasImpl implements ICatalogoPeliculas {
 
     private final IAccesoDatos datos;
 
-    public CatalogoPeliculasImpl(IAccesoDatos datos) {
+    public CatalogoPeliculasImpl() {
         this.datos = new AccesoDatosImpl();
     }
 
@@ -24,21 +24,21 @@ public class CatalogoPeliculasImpl implements ICatalogoPeliculas {
             System.out.println("Error de acceso a datos");
             ex.printStackTrace();
         }
-        
+
     }
 
     @Override
     public void listarPeliculas() {
         try {
             var peliculas = this.datos.listar(NOMBRE_RECURSO);
-       peliculas.forEach(pelicula -> {
-           System.out.println("pelicula = "+ pelicula);
-       });
+            peliculas.forEach(pelicula -> {
+                System.out.println("pelicula = " + pelicula);
+            });
         } catch (AccesoDatosEx ex) {
             System.out.println("Error de acceso datos");
             ex.printStackTrace();
         }
-        
+
     }
 
     @Override
@@ -46,6 +46,7 @@ public class CatalogoPeliculasImpl implements ICatalogoPeliculas {
         String resultado = null;
         try {
             resultado = this.datos.buscar(NOMBRE_RECURSO, buscar);
+            System.out.println(resultado);
         } catch (AccesoDatosEx ex) {
             System.out.println("Error de acceso datos");
             ex.printStackTrace(System.out);
@@ -55,9 +56,12 @@ public class CatalogoPeliculasImpl implements ICatalogoPeliculas {
     @Override
     public void iniciarCatologoPeliculas() {
         try {
-            if(this.datos.existe(NOMBRE_RECURSO)){
+            if (this.datos.existe(NOMBRE_RECURSO)) {
                 datos.borrar(NOMBRE_RECURSO);
                 datos.crear(NOMBRE_RECURSO);
+            } else {
+                datos.crear(NOMBRE_RECURSO);
+
             }
         } catch (AccesoDatosEx ex) {
             System.out.println("Error de acceso datos");
